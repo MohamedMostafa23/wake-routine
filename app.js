@@ -64,7 +64,7 @@ async function write(date,field,value){
 function done(date,k){return !!val(date,k);}
 function tab(t){activeTab=t;el('nav').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));render();window.scrollTo({top:0,behavior:'smooth'});}
 function yesNo(date,k,label,hint=''){return `<label class="task-row"><input type="checkbox" data-check="${esc(k)}" data-date="${date}" ${done(date,k)?'checked':''}/><span><strong>${label}</strong>${hint?`<span class="hint">${hint}</span>`:''}</span></label>`;}
-function strength(date,program){let p=WORKOUT[program];let rows=p.exercises.map((id,index)=>{let e=EX[id];let prior=prefillKey(date,id);let sets=[1,2].map(set=>{let kgKey=id+'_'+set+'_kg', repsKey=id+'_'+set+'_reps', doneKey=id+'_'+set+'_done';let kg=val(date,kgKey), reps=val(date,repsKey);return `<div class="set-row"><div><strong class="small">Set ${set}</strong></div><div><label>${e.kg?'kg / dumbbell':'Bodyweight'}</label>${e.kg?`<input type="number" data-save="${kgKey}" data-date="${date}" min="0" max="100" step="0.5" value="${kg===undefined?'':esc(kg)}" placeholder="${prior===null?'kg':esc(prior)}" aria-label="${esc(e.name)} set ${set} weight kg per dumbbell"/>`:`<input disabled value="BW"/>`}</div><div><label>${e.sec?'Seconds':'Reps'}</label><input type="number" data-save="${repsKey}" data-date="${date}" min="0" max="300" step="1" value="${reps===undefined?'':esc(reps)}" placeholder="${e.reps}" aria-label="${esc(e.name)} set ${set} reps"/></div><button class="set-done ${done(date,doneKey)?'yes':''}" data-setdone="${doneKey}" data-date="${date}">${done(date,doneKey)?'✓':'تم'}</button></div>`}).join('');return `<div class="ex-card"><div class="ex-head"><div><h4 dir="ltr" style="text-align:right">${index+1}. ${esc(e.name)}</h4><div class="arabic">${esc(e.ar)}</div></div><span class="tag">2 × ${esc(e.target)}</span></div><div class="pic-pair"><div class="pic"><img loading="lazy" src="${BASE_IMG+e.id}/0.jpg" alt="${esc(e.name)} starting position" onerror="this.style.display='none'"/><span>START</span></div><div class="pic"><img loading="lazy" src="${BASE_IMG+e.id}/1.jpg" alt="${esc(e.name)} finish position" onerror="this.style.display='none'"/><span>END</span></div></div><div class="instructions">${esc(e.tip)}</div>${rows}<div class="tip">راحة 60–90 ثانية بين المجموعات. في تمارين الدامبلز الوزن المكتوب لكل دامبل منفرد؛ للـGoblet Squat هو وزن الدامبل الواحد المستخدم.</div></div>`}).join('');
+function strength(date,program){let p=WORKOUT[program];let rows=p.exercises.map((id,index)=>{let e=EX[id];let prior=prefillKey(date,id);let sets=[1,2].map(set=>{let kgKey=id+'_'+set+'_kg', repsKey=id+'_'+set+'_reps', doneKey=id+'_'+set+'_done';let kg=val(date,kgKey), reps=val(date,repsKey);return `<div class="set-row"><div><strong class="small">Set ${set}</strong></div><div><label>${e.kg?'kg / dumbbell':'Bodyweight'}</label>${e.kg?`<input type="number" data-save="${kgKey}" data-date="${date}" min="0" max="100" step="0.5" value="${kg===undefined?'':esc(kg)}" placeholder="${prior===null?'kg':esc(prior)}" aria-label="${esc(e.name)} set ${set} weight kg per dumbbell"/>`:`<input disabled value="BW"/>`}</div><div><label>${e.sec?'Seconds':'Reps'}</label><input type="number" data-save="${repsKey}" data-date="${date}" min="0" max="300" step="1" value="${reps===undefined?'':esc(reps)}" placeholder="${e.reps}" aria-label="${esc(e.name)} set ${set} reps"/></div><button class="set-done ${done(date,doneKey)?'yes':''}" data-setdone="${doneKey}" data-date="${date}">${done(date,doneKey)?'✓':'تم'}</button></div>`}).join('');return `<div class="ex-card"><div class="ex-head"><div><h4 dir="ltr" style="text-align:right">${index+1}. ${esc(e.name)}</h4><div class="arabic">${esc(e.ar)}</div></div><span class="tag">2 × ${esc(e.target)}</span></div><div class="pic-pair"><div class="pic"><img loading="lazy" src="${BASE_IMG+e.id}/0.jpg" alt="${esc(e.name)} starting position" onerror="this.style.display='none'"/><span>START</span></div><div class="pic"><img loading="lazy" src="${BASE_IMG+e.id}/1.jpg" alt="${esc(e.name)} finish position" onerror="this.style.display='none'"/><span>END</span></div></div><div class="instructions">${esc(e.tip)}</div>${sets}<div class="tip">راحة 60–90 ثانية بين المجموعات. في تمارين الدامبلز الوزن المكتوب لكل دامبل منفرد؛ للـGoblet Squat هو وزن الدامبل الواحد المستخدم.</div></div>`}).join('');
 return `<section class="box"><div class="divider-label"><div><h3>${p.title}</h3><div class="desc">${p.subtitle}</div></div><span class="tag">30 دقيقة</span></div><div class="timing"><span>5د إحماء</span><span>20د تمارين</span><span>5د تهدئة</span></div><div class="callout">ابدأ كل تمرين بوزن تقدر تعمل بيه العدات بتكنيك نظيف، ولسه فاضلك 2–3 عدات في طاقتك. ابدأ بمجموعتين. بعد أسبوعين زوّد عدة أو وزنًا صغيرًا فقط لما الأداء يبقى سهل.</div><h4 class="mini-title">التمارين بالصور والوزن والعدات</h4>${rows}</section>`;
 }
 function cardio(date,program){
@@ -164,6 +164,8 @@ function bind(){
  el('content').addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;
   const date=b.dataset.date;
+  if(b.id==='retryBoot'){location.reload();return;}
+  if(b.id==='retryBoot'){location.reload();return;}
   if(b.id==='signIn'){b.disabled=true;b.textContent='جاري تسجيل الدخول…';try{await cloud.signIn();}catch(err){b.disabled=false;b.textContent='تسجيل الدخول بحساب Google';setInfo('فشل تسجيل الدخول: '+(err?.message||'خطأ غير معروف'));}return;}
   if(b.id==='signOut'){await cloud.signOut();return;}
   if(!user)return;
@@ -235,8 +237,16 @@ async function importBackup(input){
 }
 async function init(){
  bind();selectedDate=isoToday();el('topDate').textContent=dateLong(selectedDate);
+ // If external Firebase modules stall, don't leave the user on a silent loading screen.
+ const bootTimeout=setTimeout(()=>{
+   const content=el('content');
+   if(content && content.textContent.includes('بيتم تجهيز التطبيق')){
+     content.innerHTML='<section class="box"><h3>تحميل التطبيق اتأخر</h3><p>الواجهة اشتغلت، لكن Firebase لسه ما اتحمّلش. جرّب تحديث الصفحة بـ Ctrl + Shift + R، ولو المشكلة مستمرة افتح F12 ← Console وابعت أول رسالة خطأ حمرا.</p><p class="small muted">تأكد كمان إن المتصفح أو إضافة حظر الإعلانات مش مانعين www.gstatic.com.</p><button id="retryBoot" class="btn">إعادة المحاولة</button></section>';
+   }
+ },12000);
  try{
   const module=await import('./cloud.js');cloud=await module.makeCloud();
+  clearTimeout(bootTimeout);
   if(!cloud.configured){
    el('content').innerHTML=`<section class="box"><h2>⚙️ جاهز لربط Firebase</h2><p>النسخة دي جاهزة لـGitHub Pages، لكن محتاجة تحط Firebase Web App Config في الملف <code>firebase-config.js</code> وتنشر قواعد <code>firestore.rules</code>.</p><div class="notice">التطبيق مش هيزامن لحد ما تكمل إعداد Firebase. افتح ملف <code>README_AR.md</code> اللي مع التحميل، فيه الخطوات بالتفصيل.</div></section>`;return;
   }
@@ -253,6 +263,7 @@ async function init(){
    },err=>{el('content').innerHTML=`<div class="error">خطأ اتصال بقاعدة البيانات: ${esc(err?.message||'Unknown')}. تأكد من Firebase Firestore Rules.</div>`;});
   });
  }catch(err){
+  clearTimeout(bootTimeout);
   console.error(err);
   el('content').innerHTML=`<div class="error">تعذر تشغيل Firebase. تأكد من إعداداته والإنترنت. ${esc(err?.message||'')}</div>`;
  }
