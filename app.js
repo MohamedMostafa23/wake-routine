@@ -251,7 +251,7 @@ async function init(){
    el('content').innerHTML=`<section class="box"><h2>⚙️ جاهز لربط Firebase</h2><p>النسخة دي جاهزة لـGitHub Pages، لكن محتاجة تحط Firebase Web App Config في الملف <code>firebase-config.js</code> وتنشر قواعد <code>firestore.rules</code>.</p><div class="notice">التطبيق مش هيزامن لحد ما تكمل إعداد Firebase. افتح ملف <code>README_AR.md</code> اللي مع التحميل، فيه الخطوات بالتفصيل.</div></section>`;return;
   }
   cloud.listenAuth(u=>{
-   if(user?.uid===u?.uid)return;
+   if(user && u && user.uid === u.uid) return;
    if(stopWatch){stopWatch();stopWatch=null;}
    user=u;
    if(!u){state={days:{}};showSignedOut();return;}
