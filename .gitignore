@@ -1,0 +1,4 @@
+routine_data.json
+routine_config.json
+*.zip
+.DS_Store
